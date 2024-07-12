@@ -1,56 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Registration</title>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Li N.A</title>
+
+
 <body>
-	<div class='container'>
-		<div class='title'>
-			<h1>Registration</h1>
-		</div>
-
-		<div class="subtitle">
-			<form method="POST" action="login.php">
-				<input class='form' type="text" name="login" placeholder="Login">
-				<input class='form' type="password" name="password" placeholder="Password">
-				<button type="submit" name="submit">Продолжить</button>
-
-			</form>
-		</div>
-
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Авторизация</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form method="POST" action="login.php">
+                    <div class="row form__reg"><input class="form" type="text" name="login" placeholder="Login"></div>
+                    <div class="row form__reg"><input class="form" type="password" name="password" placeholder="Password"></div>
+                    <button type="submit" class="btn_red btn__reg" name="submit">Продолжить</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
-
 <?php
-require_once('db.php')
+    require_once('db.php');
 
-if (isset($_COOKIE['User'])) {
-    header("Location: profile.php");
-}
+    $link = mysqli_connect('127.0.0.1', 'root', 'kali', 'Website');
 
-$link = mysqli_connect('127.0.0.1', 'root', 'kali', 'first');
+    if (isset($_POST['submit'])) {
+        $username = $_POST['login'];
+        $password = $_POST['password'];
 
-if (isset($_POST['submit'])){
-	$username = $_POST['login'];
-	$pass = $_POST['password'];
-	if (!$username || !$pass) die ("Пожалуйста введите все значения!");
+        if (!$username || !$password) die('Пожалуйста введите все значения!');
+        
+        $sql = "SELECT * FROM users WHERE username='$username' AND pass='$password'";
 
-	$sql = "SELECT * FROM users WHERE username='$login' AND pass='$pass'";
+        $result = mysqli_query($link, $sql);
 
-	$result = mysqli_query($link, $sql);
-
-	if (mysqli_num_rows($result) == 1) {
-	  setcookie("User", $username, time()+7200);
-	  header('Location: profile.php');
-	} else {
-	  echo "не правильное имя или пароль";
-	}
-
-}
-
-
-
+        if (mysqli_num_rows($result) == 1) {
+            setcookie("User", $username, time()+7200);
+            header('Location: profile.php');
+        } else {
+            echo "не правильное имя или пароль";
+        }
+          
+    }
 ?>
